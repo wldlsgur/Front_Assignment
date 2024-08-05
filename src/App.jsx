@@ -1,6 +1,7 @@
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import React, { useState, useCallback } from 'react';
-import GlobalStyles from '@/styles/Global';
+import { ThemeProvider } from 'styled-components';
+import { GlobalStyles, theme } from '@/styles';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const GRID = 8;
 
@@ -52,7 +53,7 @@ function App() {
   );
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <GlobalStyles />
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable">
@@ -84,7 +85,7 @@ function App() {
           )}
         </Droppable>
       </DragDropContext>
-    </>
+    </ThemeProvider>
   );
 }
 
