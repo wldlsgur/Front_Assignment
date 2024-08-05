@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import StyleProvider from '@/app/provider/StyleProvider';
+import StyleProvider from './provider/StyleProvider';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const GRID = 8;
