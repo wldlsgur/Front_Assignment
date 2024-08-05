@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { ThemeProvider } from 'styled-components';
-import { GlobalStyles, theme } from '@/styles';
+import StyleProvider from '@/app/provider/StyleProvider';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const GRID = 8;
@@ -53,8 +52,7 @@ function App() {
   );
 
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyles />
+    <StyleProvider>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
@@ -85,7 +83,7 @@ function App() {
           )}
         </Droppable>
       </DragDropContext>
-    </ThemeProvider>
+    </StyleProvider>
   );
 }
 
