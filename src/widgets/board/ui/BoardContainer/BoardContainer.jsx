@@ -1,5 +1,5 @@
 import React from 'react';
-import BoardList from '../BoardList';
+import BoardList from '../BoardList/BoardList';
 import * as S from './style';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { useDragDrop } from '../../hooks';

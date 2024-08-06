@@ -1,6 +1,6 @@
 import React from 'react';
 import { Droppable } from 'react-beautiful-dnd';
-import BoardItem from './BoardItem';
+import BoardItem from '../BoardItem/BoardItem';
 
 const GRID = 8;
 
