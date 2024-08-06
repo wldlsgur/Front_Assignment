@@ -10,7 +10,7 @@ const getListStyle = (isDraggingOver) => ({
   width: 250,
 });
 
-const BoardList = ({ items, id }) => {
+const BoardList = ({ items, id, error }) => {
   return (
     <Droppable droppableId={id}>
       {(provided, snapshot) => (
@@ -21,10 +21,11 @@ const BoardList = ({ items, id }) => {
         >
           {items.map((item, index) => (
             <BoardItem
-              key={`${id}_${item.id}_${index}`}
-              id={`${id}_${item.id}_${index}`}
+              key={`${id}_${index}`}
+              id={`${id}_${index}`}
               content={item.content}
               index={index}
+              error={error}
             />
           ))}
           {provided.placeholder}

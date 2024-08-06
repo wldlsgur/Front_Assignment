@@ -6,7 +6,7 @@ import { useDragDrop } from '../../hooks';
 import { getItems } from '@/entities/board';
 
 const BoardContainer = () => {
-  const { items, onDragEnd } = useDragDrop({
+  const { error, items, onDragEnd, onDragUpdate } = useDragDrop({
     board1: getItems(10),
     board2: getItems(10),
     board3: getItems(10),
@@ -14,12 +14,11 @@ const BoardContainer = () => {
   });
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext onDragEnd={onDragEnd} onDragUpdate={onDragUpdate}>
       <S.Container>
-        <BoardList id="board1" items={items.board1} />
-        <BoardList id="board2" items={items.board2} />
-        <BoardList id="board3" items={items.board3} />
-        <BoardList id="board4" items={items.board4} />
+        {Object.entries(items).map(([id, itemsList]) => (
+          <BoardList key={id} id={id} items={itemsList} error={error} />
+        ))}
       </S.Container>
     </DragDropContext>
   );

@@ -11,7 +11,7 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   ...draggableStyle,
 });
 
-const BoardItem = ({ id, content, index }) => {
+const BoardItem = ({ id, content, index, error }) => {
   return (
     <Draggable draggableId={id} index={index}>
       {(provided, snapshot) => (
