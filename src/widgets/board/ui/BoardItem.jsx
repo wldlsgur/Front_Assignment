@@ -13,9 +13,9 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 
 const BoardItem = ({ id, content, index }) => {
   return (
-    <Draggable key={id} draggableId={id} index={index}>
+    <Draggable draggableId={id} index={index}>
       {(provided, snapshot) => (
-        <div
+        <li
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
@@ -25,7 +25,7 @@ const BoardItem = ({ id, content, index }) => {
           )}
         >
           {content}
-        </div>
+        </li>
       )}
     </Draggable>
   );
