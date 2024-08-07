@@ -1,23 +1,16 @@
 import React from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import BoardItem from '../BoardItem/BoardItem';
-
-const GRID = 8;
-
-const getListStyle = (isDraggingOver) => ({
-  background: isDraggingOver ? 'lightblue' : 'lightgrey',
-  padding: GRID,
-  width: 250,
-});
+import * as S from './style';
 
 const BoardList = ({ items, id, error }) => {
   return (
     <Droppable droppableId={id}>
       {(provided, snapshot) => (
-        <ul
+        <S.List
           {...provided.droppableProps}
           ref={provided.innerRef}
-          style={getListStyle(snapshot.isDraggingOver)}
+          $isDraggingOver={snapshot.isDraggingOver}
         >
           {items.map((item, index) => (
             <BoardItem
@@ -29,7 +22,7 @@ const BoardList = ({ items, id, error }) => {
             />
           ))}
           {provided.placeholder}
-        </ul>
+        </S.List>
       )}
     </Droppable>
   );

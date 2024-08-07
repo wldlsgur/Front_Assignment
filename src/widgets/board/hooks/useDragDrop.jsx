@@ -18,7 +18,7 @@ const useDragDrop = (list) => {
   const onDragEnd = useCallback(
     ({ destination, source }) => {
       if (!destination || error) {
-        return;
+        return setError(null);
       }
 
       const newItems = reorder(items, source, destination);
@@ -30,7 +30,7 @@ const useDragDrop = (list) => {
 
   const onDragUpdate = useCallback(({ destination, source }) => {
     if (!destination || !source) {
-      return;
+      return setError(null);
     }
 
     if (

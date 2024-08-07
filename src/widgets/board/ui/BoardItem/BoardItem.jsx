@@ -1,31 +1,20 @@
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-
-const GRID = 8;
-
-const getItemStyle = (isDragging, draggableStyle) => ({
-  userSelect: 'none',
-  padding: GRID * 2,
-  margin: `0 0 ${GRID}px 0`,
-  background: isDragging ? 'lightgreen' : 'grey',
-  ...draggableStyle,
-});
+import * as S from './style';
 
 const BoardItem = ({ id, content, index, error }) => {
   return (
     <Draggable draggableId={id} index={index}>
       {(provided, snapshot) => (
-        <li
+        <S.Item
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          style={getItemStyle(
-            snapshot.isDragging,
-            provided.draggableProps.style
-          )}
+          $isDragging={snapshot.isDragging}
+          $invalid={id === error}
         >
           {content}
-        </li>
+        </S.Item>
       )}
     </Draggable>
   );
