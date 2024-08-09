@@ -1,38 +1,43 @@
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import * as S from './style';
+import CheckBox from '../CheckBox/CheckBox';
 
 const BoardItem = ({
   id,
-  boardKey,
+  boardId,
   content,
   index,
   errorItems,
-  isChecked,
-  onCheck,
+  checked,
+  onChange,
 }) => {
   const handleKeyDown = (event) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      onCheck(boardKey, index);
+      onChange(boardId, index);
     }
   };
 
   return (
-    <Draggable draggableId={id} index={index}>
+    <Draggable
+      draggableId={id}
+      index={index}
+    >
       {({ innerRef, draggableProps, dragHandleProps }, { isDragging }) => (
         <S.Item
           ref={innerRef}
           {...draggableProps}
           {...dragHandleProps}
-          onClick={() => onCheck(boardKey, index)}
+          onClick={() => onChange(boardId, index)}
           onKeyDown={handleKeyDown}
-          $isDragging={isDragging || isChecked}
+          $isDragging={isDragging || checked}
           $invalid={errorItems.includes(id)}
         >
-          <S.CheckBox
-            checked={isChecked}
-            onChange={() => onCheck(boardKey, index)}
+          <CheckBox
+            key={checked}
+            checked={checked}
+            onChange={() => onChange(boardId, index)}
           />
           {content}
         </S.Item>

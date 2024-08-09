@@ -14,9 +14,3 @@ export const Item = styled.li.attrs(() => ({
     $invalid ? 'red' : $isDragging ? 'lightgreen' : '#0d47a1'};
   transition: transform 0.5s ease;
 `;
-
-export const CheckBox = styled.input.attrs({ type: 'checkbox' })`
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-`;

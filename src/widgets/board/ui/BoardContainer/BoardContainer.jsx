@@ -4,6 +4,7 @@ import * as S from './style';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { useDragDrop } from '../../hooks';
 import { getItems } from '@/entities/board';
+import BoardHeader from '../BoardHeader/BoardHeader';
 
 const BoardContainer = () => {
   const {
@@ -13,6 +14,7 @@ const BoardContainer = () => {
     onDragEnd,
     onDragUpdate,
     toggleChecked,
+    changeAllCheck,
   } = useDragDrop({
     board1: getItems(10),
     board2: getItems(10),
@@ -28,13 +30,19 @@ const BoardContainer = () => {
     >
       <S.Container>
         {Object.entries(items).map(([id, itemsList]) => (
-          <BoardList
-            key={id}
-            id={id}
-            items={itemsList}
-            errorItems={errorItems}
-            onCheck={toggleChecked}
-          />
+          <S.Board key={id}>
+            <BoardHeader
+              title={id}
+              boardId={id}
+              onChange={changeAllCheck}
+            />
+            <BoardList
+              id={id}
+              items={itemsList}
+              errorItems={errorItems}
+              onChange={toggleChecked}
+            />
+          </S.Board>
         ))}
       </S.Container>
     </DragDropContext>

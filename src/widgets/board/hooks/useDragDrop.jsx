@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
 const useDragDrop = (list) => {
   const [items, setItems] = useState(list);
@@ -50,12 +50,30 @@ const useDragDrop = (list) => {
     return result;
   };
 
-  const toggleChecked = useCallback(
-    (key, index) => {
-      const result = JSON.parse(JSON.stringify(items));
-      const toggledIsChecked = !result[key][index].isChecked;
+  const changeAllCheck = useCallback((boardId, checkState) => {
+    setItems((prev) => {
+      if (!prev[boardId]) {
+        return prev;
+      }
 
-      result[key][index].isChecked = toggledIsChecked;
+      const updatedItems = prev[boardId].map((item) => ({
+        ...item,
+        isChecked: checkState,
+      }));
+
+      return {
+        ...prev,
+        [boardId]: updatedItems,
+      };
+    });
+  }, []);
+
+  const toggleChecked = useCallback(
+    (boardId, index) => {
+      const result = JSON.parse(JSON.stringify(items));
+      const toggledIsChecked = !result[boardId][index].isChecked;
+
+      result[boardId][index].isChecked = toggledIsChecked;
 
       setItems(result);
     },
@@ -148,6 +166,7 @@ const useDragDrop = (list) => {
     onDragEnd,
     onDragUpdate,
     toggleChecked,
+    changeAllCheck,
   };
 };
 
