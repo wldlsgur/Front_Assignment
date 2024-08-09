@@ -1,10 +1,10 @@
 import React from 'react';
+import { DragDropContext } from 'react-beautiful-dnd';
+import BoardHeader from '../BoardHeader/BoardHeader';
 import BoardList from '../BoardList/BoardList';
 import * as S from './style';
-import { DragDropContext } from 'react-beautiful-dnd';
 import { useDragDrop } from '../../hooks';
 import { getItems } from '@/entities/board';
-import BoardHeader from '../BoardHeader/BoardHeader';
 
 const BoardContainer = () => {
   const {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import * as S from './style';
 import CheckBox from '../CheckBox/CheckBox';
+import * as S from './style';
 
 const BoardItem = ({
   id,

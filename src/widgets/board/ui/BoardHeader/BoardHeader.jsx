@@ -1,6 +1,6 @@
 import React from 'react';
-import * as S from './style';
 import CheckBox from '../CheckBox/CheckBox';
+import * as S from './style';
 
 const BoardHeader = ({ title, boardId, onChange }) => {
   return (
