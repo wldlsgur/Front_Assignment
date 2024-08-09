@@ -2,15 +2,49 @@ import { useState, useCallback } from 'react';
 
 const useDragDrop = (list) => {
   const [items, setItems] = useState(list);
-  const [error, setError] = useState(null);
+  const [errorItems, setErrorItems] = useState([]);
 
-  const reorder = (list, source, destination) => {
+  const initIsCheck = (list) => {
     const result = JSON.parse(JSON.stringify(list));
-    const sourceItems = result[source.droppableId];
-    const destinationItems = result[destination.droppableId];
 
-    const [removed] = sourceItems.splice(source.index, 1);
-    destinationItems.splice(destination.index, 0, removed);
+    for (let key in result) {
+      result[key] = result[key].map((value) => ({
+        ...value,
+        isChecked: false,
+      }));
+    }
+
+    return result;
+  };
+
+  const reorder = (list, sourceId, destinationId) => {
+    const result = JSON.parse(JSON.stringify(list));
+    const firstAppendItems = [];
+    const afterAppendItems = [];
+
+    for (let key in result) {
+      result[key] = result[key].filter((value) => {
+        const { isChecked } = value;
+
+        if (key === sourceId) {
+          if (isChecked) {
+            firstAppendItems.push(value);
+            return false;
+          }
+
+          return true;
+        }
+
+        if (isChecked) {
+          afterAppendItems.push(value);
+          return false;
+        }
+
+        return true;
+      });
+    }
+
+    result[destinationId].unshift(...firstAppendItems, ...afterAppendItems);
 
     return result;
   };
@@ -18,9 +52,9 @@ const useDragDrop = (list) => {
   const toggleChecked = useCallback(
     (key, index) => {
       const result = JSON.parse(JSON.stringify(items));
-      const toggleIsChecked = !result[key][index].isChecked;
+      const toggledIsChecked = !result[key][index].isChecked;
 
-      result[key][index].isChecked = toggleIsChecked;
+      result[key][index].isChecked = toggledIsChecked;
 
       setItems(result);
     },
@@ -53,38 +87,54 @@ const useDragDrop = (list) => {
 
   const onDragEnd = useCallback(
     ({ destination, source }) => {
-      if (!destination || error) {
-        return setError(null);
+      if (!destination || errorItems.length) {
+        return setErrorItems([]);
       }
 
-      const newItems = reorder(items, source, destination);
+      const sourceId = source.droppableId;
+      const destinationId = destination.droppableId;
 
-      setItems(newItems);
+      const newItems = reorder(items, sourceId, destinationId);
+      const result = initIsCheck(newItems);
+
+      setItems(result);
     },
-    [error, items]
+    [errorItems, items]
   );
 
-  const onDragUpdate = useCallback(({ destination, source }) => {
-    if (!destination || !source) {
-      return setError(null);
-    }
+  const onDragUpdate = useCallback(
+    ({ destination, source }) => {
+      if (!destination || !source) {
+        return setErrorItems([]);
+      }
 
-    if (
-      destination.droppableId === 'board3' &&
-      source.droppableId === 'board1'
-    ) {
-      return setError(`${source.droppableId}_${source.index}`);
-    }
+      const sourceId = source.droppableId;
+      const sourceIndex = source.index;
+      const destinationId = destination.droppableId;
+      const destinationIndex = destination.index;
 
-    if ((source.index + 1) % 2 === 0 && (destination.index + 1) % 2 === 0) {
-      return setError(`${source.droppableId}_${source.index}`);
-    }
+      if (destinationId === 'board3') {
+        const newErrorItems = [];
 
-    setError(null);
-  }, []);
+        items.board1.forEach(
+          ({ isChecked }, index) =>
+            isChecked && newErrorItems.push(`board1_${index}`)
+        );
+
+        return setErrorItems(newErrorItems);
+      }
+
+      // if ((sourceIndex + 1) % 2 === 0 && (destinationIndex + 1) % 2 === 0) {
+      //   return setError(`${sourceId}_${sourceIndex}`);
+      // }
+
+      setErrorItems([]);
+    },
+    [items]
+  );
 
   return {
-    error,
+    errorItems,
     items,
     onDragStart,
     onDragEnd,

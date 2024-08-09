@@ -6,13 +6,19 @@ import { useDragDrop } from '../../hooks';
 import { getItems } from '@/entities/board';
 
 const BoardContainer = () => {
-  const { error, items, onDragStart, onDragEnd, onDragUpdate, toggleChecked } =
-    useDragDrop({
-      board1: getItems(10),
-      board2: getItems(10),
-      board3: getItems(10),
-      board4: getItems(10),
-    });
+  const {
+    errorItems,
+    items,
+    onDragStart,
+    onDragEnd,
+    onDragUpdate,
+    toggleChecked,
+  } = useDragDrop({
+    board1: getItems(10),
+    board2: getItems(10),
+    board3: getItems(10),
+    board4: getItems(10),
+  });
 
   return (
     <DragDropContext
@@ -26,7 +32,7 @@ const BoardContainer = () => {
             key={id}
             id={id}
             items={itemsList}
-            error={error}
+            errorItems={errorItems}
             onCheck={toggleChecked}
           />
         ))}

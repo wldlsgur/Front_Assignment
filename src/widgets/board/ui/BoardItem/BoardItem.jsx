@@ -2,20 +2,28 @@ import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import * as S from './style';
 
-const BoardItem = ({ id, content, index, error, isChecked, onCheck }) => {
+const BoardItem = ({
+  id,
+  boardKey,
+  content,
+  index,
+  errorItems,
+  isChecked,
+  onCheck,
+}) => {
   return (
     <Draggable draggableId={id} index={index}>
-      {(provided, snapshot) => (
+      {({ innerRef, draggableProps, dragHandleProps }, { isDragging }) => (
         <S.Item
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          $isDragging={snapshot.isDragging}
-          $invalid={id === error}
+          ref={innerRef}
+          {...draggableProps}
+          {...dragHandleProps}
+          $isDragging={isDragging || isChecked}
+          $invalid={errorItems.includes(id)}
         >
           <S.CheckBox
             checked={isChecked}
-            onChange={() => onCheck(id.split('_')[0], index)}
+            onChange={() => onCheck(boardKey, index)}
           />
           {content}
         </S.Item>
