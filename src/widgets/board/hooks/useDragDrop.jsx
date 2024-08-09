@@ -15,6 +15,42 @@ const useDragDrop = (list) => {
     return result;
   };
 
+  const toggleChecked = useCallback(
+    (key, index) => {
+      const result = JSON.parse(JSON.stringify(items));
+      const toggleIsChecked = !result[key][index].isChecked;
+
+      result[key][index].isChecked = toggleIsChecked;
+
+      setItems(result);
+    },
+    [items]
+  );
+
+  const onDragStart = useCallback(
+    ({ source }) => {
+      const { droppableId, index: droppableIndex } = source;
+      const isChecked = items[droppableId][droppableIndex].isChecked;
+
+      if (isChecked) {
+        return;
+      }
+
+      const result = JSON.parse(JSON.stringify(items));
+
+      for (let key in result) {
+        result[key] = result[key].map((value, index) =>
+          key === droppableId && droppableIndex === index
+            ? { ...value, isChecked: true }
+            : { ...value, isChecked: false }
+        );
+      }
+
+      setItems(result);
+    },
+    [items]
+  );
+
   const onDragEnd = useCallback(
     ({ destination, source }) => {
       if (!destination || error) {
@@ -47,7 +83,14 @@ const useDragDrop = (list) => {
     setError(null);
   }, []);
 
-  return { error, items, onDragEnd, onDragUpdate };
+  return {
+    error,
+    items,
+    onDragStart,
+    onDragEnd,
+    onDragUpdate,
+    toggleChecked,
+  };
 };
 
 export default useDragDrop;

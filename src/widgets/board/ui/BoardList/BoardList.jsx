@@ -3,7 +3,7 @@ import { Droppable } from 'react-beautiful-dnd';
 import BoardItem from '../BoardItem/BoardItem';
 import * as S from './style';
 
-const BoardList = ({ items, id, error }) => {
+const BoardList = ({ items, id, error, onCheck }) => {
   return (
     <Droppable droppableId={id}>
       {(provided, snapshot) => (
@@ -16,9 +16,11 @@ const BoardList = ({ items, id, error }) => {
             <BoardItem
               key={`${id}_${index}`}
               id={`${id}_${index}`}
-              content={item.content}
+              content={`${id}_${item.content}`}
+              isChecked={item.isChecked}
               index={index}
               error={error}
+              onCheck={onCheck}
             />
           ))}
           {provided.placeholder}
