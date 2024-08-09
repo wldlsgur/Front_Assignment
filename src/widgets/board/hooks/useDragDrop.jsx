@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 const useDragDrop = (list) => {
   const [items, setItems] = useState(list);
@@ -23,11 +23,12 @@ const useDragDrop = (list) => {
     const afterAppendItems = [];
 
     for (let key in result) {
-      result[key] = result[key].filter((value) => {
+      result[key] = result[key].filter((value, index) => {
         const { isChecked } = value;
+        const isError = errorItems.includes(`${key}_${index}`);
 
         if (key === sourceId) {
-          if (isChecked) {
+          if (isChecked && !isError) {
             firstAppendItems.push(value);
             return false;
           }
@@ -35,7 +36,7 @@ const useDragDrop = (list) => {
           return true;
         }
 
-        if (isChecked) {
+        if (isChecked && !isError) {
           afterAppendItems.push(value);
           return false;
         }
@@ -87,7 +88,7 @@ const useDragDrop = (list) => {
 
   const onDragEnd = useCallback(
     ({ destination, source }) => {
-      if (!destination || errorItems.length) {
+      if (!destination) {
         return setErrorItems([]);
       }
 
@@ -98,8 +99,9 @@ const useDragDrop = (list) => {
       const result = initIsCheck(newItems);
 
       setItems(result);
+      setErrorItems([]);
     },
-    [errorItems, items]
+    [items, errorItems]
   );
 
   const onDragUpdate = useCallback(
@@ -107,13 +109,11 @@ const useDragDrop = (list) => {
       if (!destination || !source) {
         return setErrorItems([]);
       }
+      setErrorItems([]);
 
-      const sourceId = source.droppableId;
-      const sourceIndex = source.index;
-      const destinationId = destination.droppableId;
-      const destinationIndex = destination.index;
+      const { droppableId, index } = destination;
 
-      if (destinationId === 'board3') {
+      if (droppableId === 'board3') {
         const newErrorItems = [];
 
         items.board1.forEach(
@@ -121,14 +121,22 @@ const useDragDrop = (list) => {
             isChecked && newErrorItems.push(`board1_${index}`)
         );
 
-        return setErrorItems(newErrorItems);
+        setErrorItems((prev) => [...prev, ...newErrorItems]);
       }
 
-      // if ((sourceIndex + 1) % 2 === 0 && (destinationIndex + 1) % 2 === 0) {
-      //   return setError(`${sourceId}_${sourceIndex}`);
-      // }
+      if ((index + 1) % 2 === 0) {
+        const newErrorItems = [];
 
-      setErrorItems([]);
+        for (let key in items) {
+          items[key].forEach(({ isChecked }, index) => {
+            if ((index + 1) % 2 === 0 && isChecked) {
+              newErrorItems.push(`${key}_${index}`);
+            }
+          });
+        }
+
+        setErrorItems((prev) => [...prev, ...newErrorItems]);
+      }
     },
     [items]
   );
