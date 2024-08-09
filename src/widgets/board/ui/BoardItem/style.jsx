@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 
-export const Item = styled.li`
+export const Item = styled.li.attrs(() => ({
+  role: 'button',
+  tabIndex: 1,
+}))`
   display: flex;
   align-items: center;
   gap: 1rem;

@@ -11,6 +11,13 @@ const BoardItem = ({
   isChecked,
   onCheck,
 }) => {
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onCheck(boardKey, index);
+    }
+  };
+
   return (
     <Draggable draggableId={id} index={index}>
       {({ innerRef, draggableProps, dragHandleProps }, { isDragging }) => (
@@ -18,6 +25,8 @@ const BoardItem = ({
           ref={innerRef}
           {...draggableProps}
           {...dragHandleProps}
+          onClick={() => onCheck(boardKey, index)}
+          onKeyDown={handleKeyDown}
           $isDragging={isDragging || isChecked}
           $invalid={errorItems.includes(id)}
         >
