@@ -13,7 +13,7 @@ const BoardContainer = () => {
     onDragStart,
     onDragEnd,
     onDragUpdate,
-    toggleChecked,
+    toggleCheck,
     changeAllCheck,
   } = useDragDrop({
     board1: getItems(10),
@@ -40,7 +40,7 @@ const BoardContainer = () => {
               id={id}
               items={itemsList}
               errorItems={errorItems}
-              onChange={toggleChecked}
+              onChange={toggleCheck}
             />
           </S.Board>
         ))}

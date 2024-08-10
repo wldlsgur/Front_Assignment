@@ -5,10 +5,10 @@ const useDragDrop = (list) => {
   const [errorItems, setErrorItems] = useState([]);
 
   const initIsCheck = (list) => {
-    const result = JSON.parse(JSON.stringify(list));
+    const result = {};
 
-    for (let key in result) {
-      result[key] = result[key].map((value) => ({
+    for (let key in list) {
+      result[key] = list[key].map((value) => ({
         ...value,
         isChecked: false,
       }));
@@ -18,7 +18,7 @@ const useDragDrop = (list) => {
   };
 
   const reorder = (list, sourceId, destinationId) => {
-    const result = JSON.parse(JSON.stringify(list));
+    const result = { ...list };
     const firstAppendItems = [];
     const afterAppendItems = [];
 
@@ -68,9 +68,9 @@ const useDragDrop = (list) => {
     });
   }, []);
 
-  const toggleChecked = useCallback(
+  const toggleCheck = useCallback(
     (boardId, index) => {
-      const result = JSON.parse(JSON.stringify(items));
+      const result = { ...items };
       const toggledIsChecked = !result[boardId][index].isChecked;
 
       result[boardId][index].isChecked = toggledIsChecked;
@@ -89,7 +89,7 @@ const useDragDrop = (list) => {
         return;
       }
 
-      const result = JSON.parse(JSON.stringify(items));
+      const result = { ...items };
 
       for (let key in result) {
         result[key] = result[key].map((value, index) =>
@@ -165,7 +165,7 @@ const useDragDrop = (list) => {
     onDragStart,
     onDragEnd,
     onDragUpdate,
-    toggleChecked,
+    toggleCheck,
     changeAllCheck,
   };
 };
