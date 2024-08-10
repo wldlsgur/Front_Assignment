@@ -1,7 +1,12 @@
 import { useState, useCallback } from 'react';
+import useLocalStorage from './useLocalStorage';
 
 const useDragDrop = (list) => {
-  const [items, setItems] = useState(list);
+  const { value, setItem, removeItem } = useLocalStorage({
+    key: 'boardItems',
+    defaultValue: list,
+    onError: () => alert('스토리지 저장 실패'),
+  });
   const [errorItems, setErrorItems] = useState([]);
 
   const initIsCheck = (list) => {
@@ -50,46 +55,44 @@ const useDragDrop = (list) => {
     return result;
   };
 
-  const changeAllCheck = useCallback((boardId, checkState) => {
-    setItems((prev) => {
-      if (!prev[boardId]) {
-        return prev;
+  const changeAllCheck = useCallback(
+    (boardId, checkState) => {
+      if (!value[boardId]) {
+        return value;
       }
 
-      const updatedItems = prev[boardId].map((item) => ({
+      const updatedItems = value[boardId].map((item) => ({
         ...item,
         isChecked: checkState,
       }));
 
-      return {
-        ...prev,
-        [boardId]: updatedItems,
-      };
-    });
-  }, []);
+      setItem({ ...value, [boardId]: updatedItems });
+    },
+    [value]
+  );
 
   const toggleCheck = useCallback(
     (boardId, index) => {
-      const result = { ...items };
-      const toggledIsChecked = !result[boardId][index].isChecked;
+      const toggledIsChecked = !value[boardId][index].isChecked;
+      const updatedBoard = value[boardId].map((item, i) =>
+        i === index ? { ...item, isChecked: toggledIsChecked } : item
+      );
 
-      result[boardId][index].isChecked = toggledIsChecked;
-
-      setItems(result);
+      setItem({ ...value, [boardId]: updatedBoard });
     },
-    [items]
+    [value]
   );
 
   const onDragStart = useCallback(
     ({ source }) => {
       const { droppableId, index: droppableIndex } = source;
-      const isChecked = items[droppableId][droppableIndex].isChecked;
+      const isChecked = value[droppableId][droppableIndex].isChecked;
 
       if (isChecked) {
         return;
       }
 
-      const result = { ...items };
+      const result = { ...value };
 
       for (let key in result) {
         result[key] = result[key].map((value, index) =>
@@ -99,9 +102,9 @@ const useDragDrop = (list) => {
         );
       }
 
-      setItems(result);
+      setItem(result);
     },
-    [items]
+    [value]
   );
 
   const onDragEnd = useCallback(
@@ -113,13 +116,13 @@ const useDragDrop = (list) => {
       const sourceId = source.droppableId;
       const destinationId = destination.droppableId;
 
-      const newItems = reorder(items, sourceId, destinationId);
+      const newItems = reorder(value, sourceId, destinationId);
       const result = initIsCheck(newItems);
 
-      setItems(result);
+      setItem(result);
       setErrorItems([]);
     },
-    [items, errorItems]
+    [value, errorItems]
   );
 
   const onDragUpdate = useCallback(
@@ -134,7 +137,7 @@ const useDragDrop = (list) => {
       if (droppableId === 'board3') {
         const newErrorItems = [];
 
-        items.board1.forEach(
+        value.board1.forEach(
           ({ isChecked }, index) =>
             isChecked && newErrorItems.push(`board1_${index}`)
         );
@@ -145,8 +148,8 @@ const useDragDrop = (list) => {
       if ((index + 1) % 2 === 0) {
         const newErrorItems = [];
 
-        for (let key in items) {
-          items[key].forEach(({ isChecked }, index) => {
+        for (let key in value) {
+          value[key].forEach(({ isChecked }, index) => {
             if ((index + 1) % 2 === 0 && isChecked) {
               newErrorItems.push(`${key}_${index}`);
             }
@@ -156,12 +159,12 @@ const useDragDrop = (list) => {
         setErrorItems((prev) => [...prev, ...newErrorItems]);
       }
     },
-    [items]
+    [value]
   );
 
   return {
     errorItems,
-    items,
+    value,
     onDragStart,
     onDragEnd,
     onDragUpdate,

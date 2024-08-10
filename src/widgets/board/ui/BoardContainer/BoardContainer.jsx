@@ -9,7 +9,7 @@ import { getItems } from '@/entities/board';
 const BoardContainer = () => {
   const {
     errorItems,
-    items,
+    value,
     onDragStart,
     onDragEnd,
     onDragUpdate,
@@ -29,7 +29,7 @@ const BoardContainer = () => {
       onDragUpdate={onDragUpdate}
     >
       <S.Container>
-        {Object.entries(items).map(([id, itemsList]) => (
+        {Object.entries(value).map(([id, itemsList]) => (
           <S.Board key={id}>
             <BoardHeader
               title={id}
