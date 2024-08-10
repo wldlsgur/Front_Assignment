@@ -170,6 +170,7 @@ const useDragDrop = (list) => {
     onDragUpdate,
     toggleCheck,
     changeAllCheck,
+    removeItem,
   };
 };
 

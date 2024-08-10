@@ -1,7 +1,6 @@
 import React from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
-import BoardHeader from '../BoardHeader/BoardHeader';
-import BoardList from '../BoardList/BoardList';
+import { BoardHeader, BoardList, InitButton } from '..';
 import * as S from './style';
 import { useDragDrop } from '../../hooks';
 import { getItems } from '@/entities/board';
@@ -15,6 +14,7 @@ const BoardContainer = () => {
     onDragUpdate,
     toggleCheck,
     changeAllCheck,
+    removeItem,
   } = useDragDrop({
     board1: getItems(10),
     board2: getItems(10),
@@ -44,6 +44,7 @@ const BoardContainer = () => {
             />
           </S.Board>
         ))}
+        <InitButton onClick={removeItem} />
       </S.Container>
     </DragDropContext>
   );
