@@ -10,7 +10,11 @@ export const Item = styled.li.attrs(() => ({
   user-select: none;
   padding: 1.6rem;
   border-radius: 1rem;
-  background-color: ${({ $isDragging, $invalid }) =>
-    $invalid ? 'red' : $isDragging ? 'lightgreen' : '#0d47a1'};
+  background-color: ${({ $isDragging, $invalid, theme }) =>
+    $invalid
+      ? theme.colors.warning
+      : $isDragging
+      ? theme.colors.success
+      : theme.colors.primary};
   transition: transform 0.5s ease;
 `;

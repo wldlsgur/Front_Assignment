@@ -9,9 +9,11 @@ export const List = styled.ul`
   flex-shrink: 0;
   gap: 1rem;
   border-radius: 1rem;
-  color: white;
-  background-color: ${({ $isDraggingOver }) =>
-    $isDraggingOver ? 'lightblue' : '#e3f2fd'};
+  color: ${({ theme }) => theme.colors.text};
+  background-color: ${({ $isDraggingOver, theme }) =>
+    $isDraggingOver
+      ? theme.colors.background_100
+      : theme.colors.background_200};
 
   overflow-y: scroll;
   &::-webkit-scrollbar {
